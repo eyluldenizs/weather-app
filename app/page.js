@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 function formatCityName(value) {
@@ -21,16 +22,49 @@ function formatCityName(value) {
 export default function Home() {
   const [city, setCity] = useState("");
   const [selectedCity, setSelectedCity] = useState("İstanbul");
+  const [weatherData, setWeatherData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSearch() {
+async function handleSearch() {
   const formattedCity = formatCityName(city);
 
   if (formattedCity === "") {
     return;
   }
 
-  setSelectedCity(formattedCity);
+  setLoading(true);
+  setError("");
+
+  try {
+    const response = await fetch(
+      `/api/weather?city=${encodeURIComponent(formattedCity)}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Hava durumu alınamadı.");
+    }
+
+    setWeatherData(data);
+    setSelectedCity(formatCityName(data.location.name));
+  } catch (error) {
+    setError(error.message);
+    setWeatherData(null);
+  } finally {
+    setLoading(false);
+  }
 }
+const weatherIconCode =
+  weatherData?.weather?.weather?.[0]?.icon || "01d";
+
+const weatherDescription =
+  weatherData?.weather?.weather?.[0]?.description ||
+  "Hafif Parçalı Bulutlu";
+
+const weatherIconUrl =
+  `https://openweathermap.org/img/wn/${weatherIconCode}@2x.png`;
   return (
     <main className="weather-page">
       <section className="weather-card">
@@ -56,6 +90,7 @@ export default function Home() {
             type="button"
             aria-label="Hava durumunu ara"
              onClick={handleSearch}
+              disabled={loading}
           >
             <svg
               aria-hidden="true"
@@ -75,6 +110,17 @@ export default function Home() {
         </div>
           {/* Geçici hava durumu özeti */}
         <div className="weather-summary">
+          {loading && (
+  <p className="loading-message">
+    Hava durumu yükleniyor...
+  </p>
+)}
+
+{error && (
+  <p className="error-message">
+    {error}
+  </p>
+)}
           {/* Input boşsa İstanbul, doluysa yazılan şehir gösterilir */}
           <h1 className="city-name">{selectedCity}</h1>
 
@@ -83,38 +129,26 @@ export default function Home() {
 
           <div className="current-weather">
             {/* Geçici parçalı bulutlu hava ikonu */}
-            <svg
-              className="weather-icon"
-              aria-hidden="true"
-              viewBox="0 0 110 80"
-            >
-              <g
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="35" cy="27" r="14" />
-
-                <path d="M35 5V1 M35 53V49 M13 27H7 M63 27H59" />
-                <path d="M19 11L15 7 M55 47L51 43 M19 43L15 47 M55 7L51 11" />
-
-                <path
-                  d="M37 70H83C96 70 103 62 103 52C103 42 95 35 85 35C80 24 70 19 59 21C48 23 42 31 41 41C31 42 25 48 25 56C25 64 30 70 37 70Z"
-                  fill="rgba(255, 255, 255, 0.3)"
-                />
-              </g>
-            </svg>
-
+           <Image
+  className="weather-icon"
+  src={weatherIconUrl}
+  alt={weatherDescription}
+  width={110}
+  height={80}
+/>
             {/* Geçici sıcaklık değeri */}
             <p className="temperature">
-              26<span className="temperature-unit">°C</span>
+            {weatherData
+    ? Math.round(weatherData.weather.main.temp)
+    : 26}
+  <span className="temperature-unit">°C</span>
+
             </p>
           </div>
 
-          {/* Geçici hava durumu açıklaması */}
-          <p className="weather-condition">Hafif Parçalı Bulutlu</p>
+         <p className="weather-condition">
+  {weatherDescription}
+</p>
 
 {/* Nem ve rüzgâr bilgileri */}
 <div className="weather-details">
@@ -143,7 +177,10 @@ export default function Home() {
     </svg>
 
     <p className="detail-text">
-      Nem: <strong>%64</strong>
+     Nem:{" "}
+<strong>
+  %{weatherData ? weatherData.weather.main.humidity : 64}
+</strong>
     </p>
   </div>
 
@@ -183,7 +220,13 @@ export default function Home() {
     </svg>
 
     <p className="detail-text">
-      Rüzgâr: <strong>18 km/sa</strong>
+     Rüzgâr:{" "}
+<strong>
+  {weatherData
+    ? Math.round(weatherData.weather.wind.speed * 3.6)
+    : 18}{" "}
+  km/sa
+</strong>
     </p>
   </div>
 </div>
