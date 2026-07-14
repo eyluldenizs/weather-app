@@ -175,3 +175,67 @@ body {
   font-size: 16px;
   color: #334155;
 }
+
+.weather-summary {
+  /* Arama alanı ile hava durumu arasına boşluk koyar */
+  padding-top: 24px;
+  text-align: center;
+}
+
+.city-name {
+  margin: 0;
+  color: #172033;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.weather-date {
+  margin-top: 4px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.current-weather {
+  /* İkon ve sıcaklığı yan yana ve ortada gösterir */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 22px 0 14px;
+}
+
+.weather-icon {
+  width: 110px;
+  height: 80px;
+  color: #172033;
+
+  /* Alan daraldığında ikonun küçülmesini engeller */
+  flex-shrink: 0;
+}
+
+.temperature {
+  /* °C bölümünü sıcaklığın yanında konumlandırmak için Flexbox */
+  display: flex;
+  align-items: flex-start;
+
+  margin: 0;
+  color: #172033;
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -4px;
+}
+
+.temperature-unit {
+  margin-top: 5px;
+  font-size: 30px;
+  letter-spacing: 0;
+}
+
+.weather-condition {
+  margin: 0;
+  color: #334155;
+  font-size: 17px;
+  font-weight: 500;
+}
