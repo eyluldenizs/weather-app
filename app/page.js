@@ -2,9 +2,35 @@
 
 import { useState } from "react";
 
+function formatCityName(value) {
+  const trimmedValue = value.trim();
+
+  if (trimmedValue === "") {
+    return "";
+  }
+
+  const firstLetter = trimmedValue
+    .charAt(0)
+    .toLocaleUpperCase("tr-TR");
+
+  const remainingLetters = trimmedValue.slice(1);
+
+  return firstLetter + remainingLetters;
+}
+
 export default function Home() {
   const [city, setCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState("İstanbul");
 
+  function handleSearch() {
+  const formattedCity = formatCityName(city);
+
+  if (formattedCity === "") {
+    return;
+  }
+
+  setSelectedCity(formattedCity);
+}
   return (
     <main className="weather-page">
       <section className="weather-card">
@@ -29,6 +55,7 @@ export default function Home() {
             className="search-button"
             type="button"
             aria-label="Hava durumunu ara"
+             onClick={handleSearch}
           >
             <svg
               aria-hidden="true"
@@ -49,7 +76,7 @@ export default function Home() {
           {/* Geçici hava durumu özeti */}
         <div className="weather-summary">
           {/* Input boşsa İstanbul, doluysa yazılan şehir gösterilir */}
-          <h1 className="city-name">{city || "İstanbul"}</h1>
+          <h1 className="city-name">{selectedCity}</h1>
 
           {/* Tarihi ileride dinamik hale getireceğiz */}
           <p className="weather-date">Salı, 14 Temmuz</p>
