@@ -88,6 +88,79 @@ export default function Home() {
 
           {/* Geçici hava durumu açıklaması */}
           <p className="weather-condition">Hafif Parçalı Bulutlu</p>
+
+{/* Nem ve rüzgâr bilgileri */}
+<div className="weather-details">
+  {/* Nem bilgisi */}
+  <div className="detail-item">
+    <svg
+      className="detail-icon"
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M12 3S6 9.2 6 14a6 6 0 0 0 12 0c0-4.8-6-11-6-11Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M9 14.5A3.5 3.5 0 0 0 12.5 18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+
+    <p className="detail-text">
+      Nem: <strong>%64</strong>
+    </p>
+  </div>
+
+  {/* İki bilgi arasındaki dikey çizgi */}
+  <div className="detail-divider" aria-hidden="true" />
+
+  {/* Rüzgâr bilgisi */}
+  <div className="detail-item">
+    <svg
+      className="detail-icon"
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M3 8H14A3 3 0 1 0 11 5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M3 12H18A3 3 0 1 1 15 15"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M3 16H10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+
+    <p className="detail-text">
+      Rüzgâr: <strong>18 km/sa</strong>
+    </p>
+  </div>
+</div>
+
         </div>
       </section>
     </main>
